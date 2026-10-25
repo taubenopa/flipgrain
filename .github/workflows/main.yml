@@ -1,0 +1,56 @@
+name: Build Windows VST3 + Installer
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache JUCE
+        uses: actions/cache@v4
+        with:
+          path: deps
+          key: juce-${{ hashFiles('CMakeLists.txt') }}
+
+      - name: Configure
+        run: cmake -B build -G "Visual Studio 17 2022" -A x64 -DFETCHCONTENT_BASE_DIR="${{ github.workspace }}/deps"
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Installer artwork
+        run: |
+          python -m pip install pillow
+          python installer/make_assets.py
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $v = (Select-String -Path CMakeLists.txt -Pattern 'project\(FlipGrain VERSION ([0-9.]+)').Matches.Groups[1].Value
+          $plugin = Join-Path $env:GITHUB_WORKSPACE "build\FlipGrain_artefacts\Release\VST3\FlipGrain.vst3"
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "/DAppVersion=$v" "/DPluginDir=$plugin" installer\FlipGrain.iss
+          Compress-Archive -Path $plugin -DestinationPath "installer\Output\FlipGrain-$v-VST3-portable.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FlipGrain-Windows
+          path: installer/Output/*
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: installer/Output/*
