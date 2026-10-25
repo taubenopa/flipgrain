@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   windows:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
 
@@ -23,7 +23,7 @@ jobs:
           key: juce-${{ hashFiles('CMakeLists.txt') }}
 
       - name: Configure
-        run: cmake -B build -G "Visual Studio 17 2022" -A x64 -DFETCHCONTENT_BASE_DIR="${{ github.workspace }}/deps"
+        run: cmake -B build -A x64 -DFETCHCONTENT_BASE_DIR="${{ github.workspace }}/deps"
 
       - name: Build
         run: cmake --build build --config Release --parallel
