@@ -1,0 +1,14 @@
+FLIPGRAIN END USER LICENSE AGREEMENT  (PLACEHOLDER - have this reviewed by a lawyer)
+
+1. License. YourCompany grants you a non-exclusive, non-transferable license to install and use
+   FlipGrain on computers you own or control, for personal and commercial music production.
+2. Restrictions. You may not copy (except for backup), resell, redistribute, reverse engineer,
+   decompile or disassemble the software, or remove any notices.
+3. Your content. Samples you load remain your property. You are responsible for holding all
+   rights to any material you process with the software.
+4. No warranty. The software is provided "as is" without warranty of any kind.
+5. Liability. To the maximum extent permitted by law, YourCompany is not liable for indirect or
+   consequential damages arising from the use of the software.
+6. VST is a registered trademark of Steinberg Media Technologies GmbH.
+
+By clicking "I accept" you agree to these terms.
